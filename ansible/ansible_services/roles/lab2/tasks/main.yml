@@ -1,0 +1,11 @@
+- name: install nginx
+  include_tasks: nginx.yml
+
+- name: install redis
+  include_tasks: redis.yml
+
+- name: install python
+  include_tasks: python.yml
+
+- name: add notify
+  include_tasks: notify.yml

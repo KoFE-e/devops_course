@@ -1,0 +1,7 @@
+---
+- name: run lab4
+  hosts: lab4
+  become: true
+  roles:
+    - lab4
+...

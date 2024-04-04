@@ -1,0 +1,8 @@
+- name: install redis
+  package:
+    state: present
+    name: redis-server
+
+- name: Redis start
+  shell:
+    cmd: /usr/bin/redis-server /etc/redis/redis.conf

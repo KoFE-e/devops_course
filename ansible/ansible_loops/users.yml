@@ -1,0 +1,12 @@
+- name: playbook
+  hosts: all
+  become: true
+  tasks:
+  - name: Add some users
+    user:
+      name: "{{ item }}"
+      state: present
+      groups: "user"
+    loop:
+      - testuser1
+      - testuser2

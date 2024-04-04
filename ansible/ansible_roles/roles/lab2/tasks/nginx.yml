@@ -1,0 +1,18 @@
+- name: install packages
+  package:
+    state: present
+    name: nginx
+
+- name: add our page nginx
+  template:
+    src: index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    owner: root
+    group: root
+    mode: '644'
+
+- name: restart nginx
+  systemd:
+    name: nginx
+    enabled: true
+    state: restarted

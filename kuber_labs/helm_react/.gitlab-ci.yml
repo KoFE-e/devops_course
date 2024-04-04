@@ -1,0 +1,32 @@
+stages:
+  - build
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - 'docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN simpleaddress.ru:5050'
+    - 'docker build -t simpleaddress.ru:5050/do-6/petrovyh_kubernetes_last .'
+    - 'docker push simpleaddress.ru:5050/do-6/petrovyh_kubernetes_last'
+
+retag-job:
+  stage: build
+  script:
+    - "sed -i 's/tag: \"\"/tag: \"latest\"/g' ./mychart/values.yaml"
+
+deploy-job:
+  stage: deploy
+  tags:
+    - k8s
+  image: alpine/helm:latest
+  script:
+    - helm install mychart ./mychart
+  after_script:
+    - export NODE_PORT=$(kubectl get --namespace petrovyh-last -o jsonpath="{.spec.ports[0].nodePort}" services react-mychart)
+    - export NODE_IP=$(kubectl get nodes --namespace petrovyh-last -o jsonpath="{.items[0].status.addresses[0].address}")
+    - echo http://$NODE_IP:$NODE_PORT > access.txt
+  artifacts:
+    paths:
+      - access.txt
+
+

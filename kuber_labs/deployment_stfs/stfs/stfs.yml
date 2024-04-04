@@ -1,0 +1,119 @@
+---
+#Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stfsnamespace
+  labels:
+    app: my_app
+    another_label: some_data
+
+---
+#StorageClass
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: my-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+#PV
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-pv
+  labels:
+    app: my_stfs
+spec:
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /tmp/k8s_volume/my_pv
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: my-storage
+status:
+  phase: Available
+
+---
+#PV2
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-pv-2
+  labels:
+    app: my_stfs
+spec:
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /tmp/k8s_volume/my_pv_2
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: my-storage
+status:
+  phase: Available
+
+
+---
+#PVC
+
+---
+#Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: stfsnamespace
+  labels:
+    app: my_stfs
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: my_stfs
+
+---
+#STFS
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-stfs-nginx
+  namespace: stfsnamespace
+spec:
+  selector:
+    matchLabels:
+      app: my_stfs
+  serviceName: "nginx"
+  replicas: 2
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: my_stfs
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: my-stfs-nginx
+        image: registry.k8s.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: my-pvc
+          mountPath: /tmp/
+  volumeClaimTemplates:
+  - metadata:
+      name: my-pvc
+    spec:
+      accessModes: ["ReadWriteMany"]
+      storageClassName: "my-storage"
+      resources:
+        requests:
+          storage: 101

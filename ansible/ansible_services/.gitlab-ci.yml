@@ -1,0 +1,22 @@
+variables:
+  BOT_TOKEN_CI:
+    description: "Бот токен"
+    value: "6344485887:AAEMMy_Z-U2KZmoMnmvjsAoJ9_RBW1I7H8Q"
+  CHAT_ID_CI:
+    description: "ID чата"
+    value: "-1002113785669"
+  NOTIFY_TIME_CI:
+    description: "Как часто присылать сообщения в минутах"
+    value: "1,11,21,31,41,51"
+
+deploy:
+  stage: deploy
+  script: 
+    - ansible-playbook --inventory inventories/test.yml lab2.yml -e 'ansible_user=user ansible_password=123456'
+  variables:
+    NOTIFY_TIME: $NOTIFY_TIME_CI
+    CHAT_ID: $CHAT_ID_CI
+    BOT_TOKEN: $BOT_TOKEN_CI
+    GITLAB_LOGIN: $GITLAB_USER_LOGIN
+  tags:
+    - lab

@@ -1,0 +1,11 @@
+[Unit]
+Description=Advanced key-value store
+
+[Service]
+ExecStart=/usr/bin/redis-server /etc/redis/redis.conf --supervised systemd --daemonize no
+ExecStop=pkill -f /usr/bin/redis-server
+PIDFile=/run/redis/redis.service.pid
+
+[Install]
+WantedBy=multi-user.target
+Alias=redis.service

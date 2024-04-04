@@ -1,0 +1,21 @@
+- name: install curl and cron
+  package:
+    state: present
+    name: "{{ item }}"
+  with_items:
+    - curl
+    - cron
+
+- name: add notify script
+  template:
+    src: notify.sh.j2
+    dest: /opt/notify.sh
+    owner: root
+    group: root
+    mode: '744'
+
+- name: creates notify job
+  cron:
+    name: "notify job"
+    minute: "{{ notify_time | quote }}"
+    job: "/opt/notify.sh"

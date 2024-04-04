@@ -1,0 +1,40 @@
+include:
+  - project: 'do-6/13.11_Petrovykh'
+    file: '.print_project_name.yml'
+    ref: dev
+
+variables:
+  name_of_file: 'test.log'
+
+stages:
+  - child-build
+  - build
+  - test
+  - deploy
+  - parse
+
+build-job:
+  stage: build
+  script:
+    - python3 main.py
+    - date >> $name_of_file
+  artifacts:
+    paths:
+      - $name_of_file
+
+test-job:
+  stage: test
+  script:
+    - echo 'test'
+    - cat $name_of_file
+  needs: ['build-job']
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo 'deploy'
+    - python3 deploy.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+      when: on_success
+      allow_failure: true

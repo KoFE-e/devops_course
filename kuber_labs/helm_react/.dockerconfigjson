@@ -1,0 +1,8 @@
+{
+    "auths": {
+        "https://simpleaddress.ru:5050":{
+            "username":"gitlab-ci-token",
+            "password":"X8gGp778tBgXvUQ3kNkX"
+    	}
+    }
+}

@@ -1,0 +1,5 @@
+- name: run lab2
+  hosts: lab2
+  become: true
+  roles:
+    - lab2

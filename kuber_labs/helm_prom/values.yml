@@ -1,0 +1,9 @@
+prometheus:
+  server:
+    service:
+      servicePort: 9999
+      prefixURL: 'wew'
+
+loki:
+  service:
+    port: 3100

@@ -1,0 +1,22 @@
+- name: install packages
+  package:
+    state: present
+    name: pip
+
+- name: install python libs from requirements.txt
+  ansible.builtin.pip:
+    name:
+      - flask
+      - redis
+
+- name: copy app.py
+  copy:
+    src: app.py
+    dest: /opt/app.py
+    owner: root
+    group: root
+    mode: '644'
+
+- name: start app.py
+  shell:
+    cmd: nohup flask --app /opt/app.py run --no-debug > /opt/log.txt 2>&1 &

@@ -1,0 +1,34 @@
+- name: install packages
+  package:
+    state: present
+    name: pip
+
+- name: install python libs from requirements.txt
+  ansible.builtin.pip:
+    name:
+      - flask
+      - redis
+
+- name: copy app.py
+  template:
+    src: app.py.j2
+    dest: /opt/app.py
+    owner: root
+    group: root
+    mode: '644'
+
+- name: add app service
+  copy:
+    src: lab5_app.service
+    dest: /etc/systemd/system/lab5_app.service
+    owner: root
+    group: root
+    mode: '644'
+    follow: yes
+
+- name: restart lab5_app
+  systemd:
+    name: lab5_app
+    daemon_reload: true
+    enabled: true
+    state: restarted

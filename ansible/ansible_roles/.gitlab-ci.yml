@@ -1,0 +1,6 @@
+deploy:
+  stage: deploy
+  script: 
+    - ansible-playbook --inventory inventories/test.yml lab2.yml
+  tags:
+    - lab

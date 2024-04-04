@@ -1,0 +1,10 @@
+[Unit]
+Description=App Service
+
+[Service]
+ExecStart=flask --app /opt/app.py run --no-debug
+ExecStop=pkill -f /opt/app.py
+
+[Install]
+WantedBy=multi-user.target
+Alias=lab5_app.service

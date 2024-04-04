@@ -1,0 +1,20 @@
+stages:
+  - child-build
+  - parse
+
+child-build:
+  stage: child-build
+  script:
+    - echo $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME $CI_COMMIT_AUTHOR
+
+parse:
+  stage: parse
+  script:
+    - curl $site_name > $file_name
+  variables:
+    site_name: 'http://www.patriarchia.ru/'
+    file_name: 'site.html'
+  artifacts:
+    paths:
+      - $file_name
+  

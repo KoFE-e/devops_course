@@ -1,0 +1,22 @@
+#!/bin/sh
+
+TOKEN="{{ token }}"
+ID="{{ chat_id }}"
+URL="https://api.telegram.org/bot$TOKEN/sendMessage"
+
+systemctl -q is-active nginx && \
+nginx="Nginx Running" || \ 
+nginx="ALARM!!! Nginx is not running!"
+
+systemctl -q is-active redis && \
+redis="Redis Running" || \
+redis="ALARM!!! Redis is not running!"
+
+systemctl -q is-active lab5_app && \
+lab_app="python Running" || \
+lab_app="ALARM!!! our app is not running!"
+
+how_much="$(curl http://127.0.0.1:5000)"
+
+curl -X POST --silent --output /dev/null $URL -d chat_id=$ID -d text="$nginx %0A$redis %0A$lab_app %0A%0AOur site:%0A$how_much"
+exit 0

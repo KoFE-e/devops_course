@@ -1,0 +1,24 @@
+---
+- name: Basic group
+  hosts: all
+  become: true
+  vars:
+    test_var: test
+    version: 7.0
+    ansible_date_time: datetime
+
+  tasks:
+  - name: Test vars
+    debug:
+      msg: "Variables {{ test_var }} {{ ansible_date_time}}"
+  - name: Print the package facts
+    debug:
+      var: ansible_facts
+  - name: Print debug 7
+    debug:
+      msg: Test php7
+    when: version > 7.2 and version < 8.0
+  - name: Print debug 8
+    debug:
+      msg: Test php8
+    when: version > 8.0

@@ -1,0 +1,11 @@
+- name: run lab2
+  hosts: lab2
+  become: true
+  vars:
+    my_favorite_word: 'students!'
+    notify_time: "{{ lookup('env', 'NOTIFY_TIME') }}"
+    token: "{{ lookup('env', 'BOT_TOKEN')}}"
+    chat_id: "{{ lookup('env', 'CHAT_ID')}}"
+    gitlab_user: "{{ lookup('env', 'GITLAB_LOGIN')}}"
+  roles:
+    - lab2

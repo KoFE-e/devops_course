@@ -1,0 +1,23 @@
+- name: last_task
+  hosts: all
+  become: true
+  vars:
+    - user1: first_user
+    - user2: second_user
+  tasks:
+  - name: Add some users
+    user:
+      name: "{{ item }}"
+      state: present
+      groups: "user"
+    loop:
+      - "{{ user1 }}"
+      - "{{ user2 }}"
+  - name: Install packages
+    package:
+      state: present
+      name: "{{ item }}"
+    loop:
+      - iputils-ping
+      - nmap
+      - traceroute
